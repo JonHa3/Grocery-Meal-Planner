@@ -7,6 +7,13 @@
             "Sour Cream",
             "Shell",
             "Avocado"
+        ],
+        "Oatmeal": [
+            "Oats",
+            "Almond Milk",
+            "Cinnamon",
+            "Honey",
+            "Bannana"
         ]
     },
     "meal_plan": {
@@ -17,7 +24,7 @@
         },
         "Tuesday": {
             "Breakfast": null,
-            "Lunch": null,
+            "Lunch": "Tacos",
             "Dinner": null
         },
         "Wednesday": {
@@ -31,7 +38,7 @@
             "Dinner": null
         },
         "Friday": {
-            "Breakfast": null,
+            "Breakfast": "Oatmeal",
             "Lunch": null,
             "Dinner": null
         },
@@ -41,9 +48,9 @@
             "Dinner": null
         },
         "Sunday": {
-            "Breakfast": null,
-            "Lunch": null,
-            "Dinner": null
+            "Breakfast": "Eggs",
+            "Lunch": "Sandwich",
+            "Dinner": "Salmon w/Rice"
         }
     }
 }

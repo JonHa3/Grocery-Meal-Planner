@@ -91,6 +91,28 @@ def add_meal():
     save_data()
     print(f"Set {selected_meal.capitalize()} for {selected_day} to '{meal_name}' successfully!")
 
+def view_grocery_list():
+    print("\n=== Grocery List ===")
+    grocery_list = {}
+
+    for day, meals in meal_plan.items():
+        for meal_type, meal_name in meals.items():
+            if meal_name and meal_name in saved_recipes:
+                for ingredient in saved_recipes[meal_name]:
+                    if ingredient in grocery_list:
+                        grocery_list[ingredient] += 1
+                    else:
+                        grocery_list[ingredient] = 1
+    if not grocery_list:
+        print("\nNo ingredients found! Make sure your meals have saved recipes")
+    else:
+        print("\nIngredients needed for the week: ")
+        for ingredient, count in grocery_list.items():
+            if count > 1:
+                print(f" - {ingredient} (x{count})")
+            else:
+                print(f" - {ingredient}")
+
 
 def main():
     load_data()
@@ -116,6 +138,8 @@ def main():
             view_recipes()
         elif choice == "4":
             add_recipe()
+        elif choice == "5":
+            view_grocery_list()
         elif choice == "7":
             print("Goodbye!")
             break
