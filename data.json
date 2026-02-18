@@ -8,5 +8,42 @@
             "Shell",
             "Avocado"
         ]
+    },
+    "meal_plan": {
+        "Monday": {
+            "Breakfast": "7",
+            "Lunch": null,
+            "Dinner": null
+        },
+        "Tuesday": {
+            "Breakfast": null,
+            "Lunch": null,
+            "Dinner": null
+        },
+        "Wednesday": {
+            "Breakfast": null,
+            "Lunch": null,
+            "Dinner": null
+        },
+        "Thursday": {
+            "Breakfast": null,
+            "Lunch": null,
+            "Dinner": null
+        },
+        "Friday": {
+            "Breakfast": null,
+            "Lunch": null,
+            "Dinner": null
+        },
+        "Saturday": {
+            "Breakfast": null,
+            "Lunch": null,
+            "Dinner": null
+        },
+        "Sunday": {
+            "Breakfast": null,
+            "Lunch": null,
+            "Dinner": null
+        }
     }
 }
