@@ -31,7 +31,7 @@ def add_recipe():
     ingredients = input("Enter the ingredients (comma separated): ")
     if ingredients == "0":
         return
-        
+
     ingredients_list = [i.strip() for i in ingredients.split(',')]
     saved_recipes[name] = ingredients_list
     save_data()
@@ -89,10 +89,9 @@ def add_meal():
         print("\nSaved Recipes:")
         recipe_list = sorted(saved_recipes.keys())
         for i, recipe in enumerate(recipe_list,1):
-            print(f"{i}. {recipe}")
-            print(f" {len(recipe_list) + 1}. Enter Custom Meal")
-            print("0. Go Back")
-
+            print(f"{i}. {recipe}")    
+        print(f"{len(recipe_list) + 1}. Enter Custom Meal")
+        print("0. Go Back")
         recipe_choice = input("\nEnter Choice: ")
         if recipe_choice == "0":
             return
@@ -140,6 +139,50 @@ def clear_meal_plan():
     else:
         print("Clear action cancelled.")
 
+def delete_meal():
+    print("\n=== Delete a Meal ===")
+    print("Select a day:")
+    for i, day in enumerate(days, 1):
+        print(f"{i}. {day}")
+    print("0. Go Back")
+
+    day_choice = input("\nEnter the number corresponding to the day: ")
+
+    if day_choice == "0":
+        return
+    if not day_choice.isdigit() or int(day_choice) < 1 or int(day_choice) > len(days):
+        print("Invalid choice. Please try again.")
+        return
+    selected_day = days[int(day_choice) - 1]
+
+    print(f"\nCurrent meals for {selected_day}:")
+    print(f"1. Breakfast: {meal_plan[selected_day]['Breakfast'] or 'Not Set'}")
+    print(f"2. Lunch: {meal_plan[selected_day]['Lunch'] or 'Not Set'}")
+    print(f"3. Dinner: {meal_plan[selected_day]['Dinner'] or 'Not Set'}")
+    print("0. Go Back")
+
+    meal_choice = input("\nEnter the number corresponding to the meal to delete: ")
+    if meal_choice == "0":
+        return
+    meal_types = {"1": "Breakfast", "2": "Lunch", "3": "Dinner"}
+    if meal_choice not in meal_types:
+        print("Invalid choice. Please try again.")
+        return
+    
+    selected_meal = meal_types[meal_choice]
+    
+    if meal_plan[selected_day][selected_meal] is None:
+        print(f"{selected_meal.capitalize()} for {selected_day} is already empty!")
+        return
+    
+    confirm = input(f"Are you sure you want to delete {selected_meal} for {selected_day}? (yes/no): ").lower()
+    if confirm == "yes":
+        meal_plan[selected_day][selected_meal] = None
+        save_data()
+        print(f"{selected_meal.capitalize()} for {selected_day} deleted successfully!")
+    else:
+        print("Delete action cancelled.")
+
 def main():
     load_data()
     while True:
@@ -152,9 +195,10 @@ def main():
         print("4. Add a New Recipe")
         print("5. View Grocery List")
         print("6. Clear Weekly Plan")
-        print("7. Exit")
+        print("7. Delete a Meal")
+        print("8. Exit")
 
-        choice = input("\nPlease enter your choice (1-7): ")
+        choice = input("\nPlease enter your choice (1-8): ")
 
         if choice == "1":
             view_meal_plan()
@@ -169,6 +213,8 @@ def main():
         elif choice == "6":
             clear_meal_plan()
         elif choice == "7":
+            delete_meal()
+        elif choice == "8":
             print("Goodbye!")
             break
         else:
