@@ -37,6 +37,42 @@ def add_recipe():
     save_data()
     print(f"\n'{name}' added successfully!")
 
+def edit_recipe():
+    if not saved_recipes:
+        print("\nNo recipes saved yet.")
+        return
+
+    print("\n=== Edit a Recipe ===")
+    recipe_list = sorted(saved_recipes.keys())
+    for i, recipe in enumerate(recipe_list, 1):
+        print(f"{i}. {recipe}")
+    print("0. Go Back")
+
+    choice = input("\nEnter the number corresponding to the recipe you want to edit: ")
+
+    if choice == "0":
+        return
+    if not choice.isdigit() or int(choice) < 1 or int(choice) > len(recipe_list):
+        print("Invalid choice. Please try again.")
+        return
+
+    selected_recipe = recipe_list[int(choice) - 1]
+
+    print(f"\nCurrent ingredients for {selected_recipe}:")
+    for ingredient in saved_recipes[selected_recipe]:
+        print(f" - {ingredient}")
+
+    print("\nEnter the new ingredients that will replace the current ones (comma separated)")
+    new_ingredients = input("Enter ingredients with quantitities (e.g. '2 eggs, 1 cup flour'): ")
+
+    if new_ingredients == "0":
+        return
+
+    ingredients_list = [i.strip() for i in new_ingredients.split(',')]
+    saved_recipes[selected_recipe] = ingredients_list
+    save_data()
+    print(f"\n'{selected_recipe}' updated successfully!")
+
 def view_recipes():
     if not saved_recipes:
         print("\nNo recipes saved yet.")
@@ -196,9 +232,10 @@ def main():
         print("5. View Grocery List")
         print("6. Clear Weekly Plan")
         print("7. Delete a Meal")
-        print("8. Exit")
+        print("8. Edit a Recipe")
+        print("9. Exit")
 
-        choice = input("\nPlease enter your choice (1-8): ")
+        choice = input("\nPlease enter your choice (1-9): ")
 
         if choice == "1":
             view_meal_plan()
@@ -215,6 +252,8 @@ def main():
         elif choice == "7":
             delete_meal()
         elif choice == "8":
+            edit_recipe()
+        elif choice == "9":
             print("Goodbye!")
             break
         else:
