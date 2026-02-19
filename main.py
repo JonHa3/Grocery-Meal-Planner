@@ -22,8 +22,16 @@ def save_data():
         json.dump({"recipes": saved_recipes, "meal_plan": meal_plan}, f, indent=4)
 
 def add_recipe():
+    print("0. Cancel")
     name = input("Enter the name of the recipe: ")
+    if name == "0":
+        return
+
+    print("0. Cancel")
     ingredients = input("Enter the ingredients (comma separated): ")
+    if ingredients == "0":
+        return
+        
     ingredients_list = [i.strip() for i in ingredients.split(',')]
     saved_recipes[name] = ingredients_list
     save_data()
@@ -52,6 +60,7 @@ def add_meal():
     print("Select a day:")
     for i, day in enumerate(days, 1):
         print(f"{i}. {day}")
+    print("0. Go Back")
 
     day_choice = input("\nEnter the number corresponding to the day: ")
     if not day_choice.isdigit() or int(day_choice) < 1 or int(day_choice) > len(days):
@@ -63,8 +72,12 @@ def add_meal():
     print("\n1. Breakfast")
     print("2. Lunch")
     print("3. Dinner")
+    print("0. Go Back")
 
     meal_choice = input("\nEnter the number corresponding to the meal type: ")
+
+    if meal_choice == "0":
+        return
     meal_types = {"1": "Breakfast", "2": "Lunch", "3": "Dinner"}
     if meal_choice not in ["1", "2", "3"]:
         print("Invalid choice. Please try again.")
@@ -78,9 +91,12 @@ def add_meal():
         for i, recipe in enumerate(recipe_list,1):
             print(f"{i}. {recipe}")
             print(f" {len(recipe_list) + 1}. Enter Custom Meal")
+            print("0. Go Back")
 
         recipe_choice = input("\nEnter Choice: ")
-        if recipe_choice.isdigit() and int(recipe_choice) in range(1, len(recipe_list) + 1):
+        if recipe_choice == "0":
+            return
+        elif recipe_choice.isdigit() and int(recipe_choice) in range(1, len(recipe_list) + 1):
             meal_name = recipe_list[int(recipe_choice) - 1]
         else:
             meal_name = input("Enter Meal Name: ")
