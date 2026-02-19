@@ -34,7 +34,7 @@ def view_recipes():
         print("\nNo recipes saved yet.")
     else:
         print("\n=== Saved Recipes ===")
-        for meal, ingredients in saved_recipes.items():
+        for meal, ingredients in sorted(saved_recipes.items()):
             print(f"\n{meal}: ")
             for ingredient in ingredients:
                 print(f" - {ingredient}")
@@ -74,7 +74,7 @@ def add_meal():
 
     if saved_recipes:
         print("\nSaved Recipes:")
-        recipe_list = list(saved_recipes.keys())
+        recipe_list = sorted(saved_recipes.keys())
         for i, recipe in enumerate(recipe_list,1):
             print(f"{i}. {recipe}")
             print(f" {len(recipe_list) + 1}. Enter Custom Meal")
