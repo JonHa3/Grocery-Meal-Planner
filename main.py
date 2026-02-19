@@ -113,6 +113,16 @@ def view_grocery_list():
             else:
                 print(f" - {ingredient}")
 
+def clear_meal_plan():
+    global meal_plan
+    print("\nAre you sure you want to clear the weekly meal plan? This action cannot be undone. (yes/no)")
+    choice = input().lower()
+    if choice == "yes":
+        meal_plan = {day: { "Breakfast": None, "Lunch": None, "Dinner": None} for day in days}
+        save_data()
+        print("Weekly meal plan cleared successfully!")
+    else:
+        print("Clear action cancelled.")
 
 def main():
     load_data()
@@ -140,6 +150,8 @@ def main():
             add_recipe()
         elif choice == "5":
             view_grocery_list()
+        elif choice == "6":
+            clear_meal_plan()
         elif choice == "7":
             print("Goodbye!")
             break

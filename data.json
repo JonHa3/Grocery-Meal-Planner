@@ -18,13 +18,13 @@
     },
     "meal_plan": {
         "Monday": {
-            "Breakfast": "7",
+            "Breakfast": null,
             "Lunch": null,
             "Dinner": null
         },
         "Tuesday": {
             "Breakfast": null,
-            "Lunch": "Tacos",
+            "Lunch": null,
             "Dinner": null
         },
         "Wednesday": {
@@ -38,7 +38,7 @@
             "Dinner": null
         },
         "Friday": {
-            "Breakfast": "Oatmeal",
+            "Breakfast": null,
             "Lunch": null,
             "Dinner": null
         },
@@ -48,9 +48,9 @@
             "Dinner": null
         },
         "Sunday": {
-            "Breakfast": "Eggs",
-            "Lunch": "Sandwich",
-            "Dinner": "Salmon w/Rice"
+            "Breakfast": null,
+            "Lunch": null,
+            "Dinner": null
         }
     }
 }
