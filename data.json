@@ -14,6 +14,12 @@
             "Cinnamon",
             "Honey",
             "Bannana"
+        ],
+        "Chicken Alfredo": [
+            "Pasta",
+            "Alfredo",
+            "Chicken",
+            "Parmesan"
         ]
     },
     "meal_plan": {
@@ -40,7 +46,7 @@
         "Friday": {
             "Breakfast": null,
             "Lunch": null,
-            "Dinner": null
+            "Dinner": "Chicken Alfredo"
         },
         "Saturday": {
             "Breakfast": null,
@@ -53,6 +59,15 @@
             "Dinner": null
         }
     },
-    "extras_list": [],
-    "checked_off": []
+    "extras_list": [
+        "Garlic",
+        "Onion Powder",
+        "Butter"
+    ],
+    "checked_off": [
+        "Garlic",
+        "Onion Powder",
+        "Cheese",
+        "Beef"
+    ]
 }

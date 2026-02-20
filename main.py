@@ -298,6 +298,51 @@ def check_off_items():
         else:
             print("Invalid choice. Please try again.")
 
+def export_grocery_list():
+    print("\n=== Export Grocery List ===")
+    categorized = {}
+
+    for day, meals in meal_plan.items():
+        for meal_type, meal_name in meals.items():
+            if meal_name and meal_name in saved_recipes:
+                for ingredient in saved_recipes[meal_name]:
+                    category = get_category(ingredient)
+                    if category not in categorized:
+                        categorized[category] = []
+                    if ingredient not in categorized[category]:
+                        categorized[category].append(ingredient)
+    if not categorized and not extras_list:
+        print("\nNo ingredients found! Make sure your meals have saved recipes.")
+        return
+    
+    filename = input("Enter filename to export to (e.g. 'grocery_list.txt'): ")
+    if filename.strip() == "":
+        print("Defaulting to 'grocery_list.txt'")
+        filename = "grocery_list.txt"
+    filename = filename.strip().replace(" ", "_")
+    if not filename.endswith(".txt"):
+        filename += ".txt"
+    filepath = os.path.join(BASE_DIR, filename)
+
+    with open(filepath, "w",encoding="utf-8") as f:
+        f.write("==== Grocery List ====\n")
+        f.write(f"Generated on: {__import__('datetime').datetime.now().strftime('%B %d, %Y')}\n")
+        f.write("=" * 30 + "\n")
+
+        for category, ingredients in sorted(categorized.items()):
+            f.write(f"\n{category}:\n")
+            for ingredient in ingredients:
+                status = "✓" if ingredient in checked_off else " "
+                f.write(f" - [{status}] {ingredient}\n")
+        
+        if extras_list:
+            f.write("\nExtras/Spices:\n")
+            for item in extras_list:
+                status = "✓" if item in checked_off else " "
+                f.write(f" - [{status}] {item}\n")
+
+    print(f"Grocery list exported successfully to '{filename}'!")
+    print(f"Saved to: {filepath}")
 def clear_meal_plan():
     global meal_plan
     print("\nAre you sure you want to clear the weekly meal plan? This action cannot be undone. (yes/no)")
@@ -367,11 +412,12 @@ def main():
         print("6. Edit a Recipe/Delete a Recipe")
         print("7. View Grocery List")
         print("8. Check Off Items")
-        print("9. Manage Extras/Spices")
-        print("10. Clear Weekly Plan")
-        print("11. Exit")
+        print("9. Export Grocery List")
+        print("10. Manage Extras/Spices")
+        print("11. Clear Weekly Plan")
+        print("12. Exit")
 
-        choice = input("\nPlease enter your choice (1-11): ")
+        choice = input("\nPlease enter your choice (1-12): ")
 
         if choice == "1":
             view_meal_plan()
@@ -390,10 +436,12 @@ def main():
         elif choice == "8":
             check_off_items()
         elif choice == "9":
-            manage_extras()
+            export_grocery_list()
         elif choice == "10":
-            clear_meal_plan()
+            manage_extras()
         elif choice == "11":
+            clear_meal_plan()
+        elif choice == "12":
             print("Thank you for using Grocery Meal Planner! Goodbye!")
             break
         else:
