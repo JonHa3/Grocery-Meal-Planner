@@ -1,5 +1,6 @@
 import json
 import os
+from categories import categories, get_category
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, "data.json")
@@ -196,21 +197,25 @@ def add_meal():
 
 def view_grocery_list():
     print("\n=== Grocery List ===")
-    grocery_list = []
+    categorized = {}
 
     for day, meals in meal_plan.items():
         for meal_type, meal_name in meals.items():
             if meal_name and meal_name in saved_recipes:
                 for ingredient in saved_recipes[meal_name]:
-                    if ingredient not in grocery_list:
-                        grocery_list.append(ingredient)
-
-    if not grocery_list and not extras_list:
+                    category = get_category(ingredient)
+                    if category not in categorized:
+                        categorized[category] = []
+                    if ingredient not in categorized[category]:
+                        categorized[category].append(ingredient)
+                    
+    if not categorized and not extras_list:
         print("\nNo ingredients found! Make sure your meals have saved recipes.")
     else:
-        print("\nIngredients needed for the week:")
-        for ingredient in grocery_list:
-            print(f"  - {ingredient}")
+        for category, ingredients in sorted(categorized.items()):
+            print(f"\n{category}:")
+            for ingredient in ingredients:
+                print(f" - {ingredient}")
         
         if extras_list:
             print("\nExtras/Spices:")
