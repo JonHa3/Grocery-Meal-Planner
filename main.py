@@ -69,21 +69,42 @@ def edit_recipe():
 
     selected_recipe = recipe_list[int(choice) - 1]
 
-    print(f"\nCurrent ingredients for {selected_recipe}:")
-    for ingredient in saved_recipes[selected_recipe]:
-        print(f" - {ingredient}")
+    print(f"\nWhat would you like to do with '{selected_recipe}'?")
+    print("1. Edit Ingredients")
+    print("2. Delete Recipe")
+    print("0. Go Back")
+    
+    action = input("\nEnter your choice: ")
 
-    print("\nEnter the new ingredients that will replace the current ones (comma separated)")
-    new_ingredients = input("Enter ingredients with quantitities (e.g. '2 eggs, 1 cup flour'): ")
-
-    if new_ingredients == "0":
+    if action == "0":
         return
+    elif action == "1":
 
-    ingredients_list = [i.strip() for i in new_ingredients.split(',')]
-    saved_recipes[selected_recipe] = ingredients_list
-    save_data()
-    print(f"\n'{selected_recipe}' updated successfully!")
+        print(f"\nCurrent ingredients for {selected_recipe}:")
+        for ingredient in saved_recipes[selected_recipe]:
+            print(f" - {ingredient}")
 
+        print("\nEnter the new ingredients that will replace the current ones (comma separated)")
+        new_ingredients = input("Enter ingredients with quantitities (e.g. '2 eggs, 1 cup flour'): ")
+
+        if new_ingredients == "0":
+            return
+
+        ingredients_list = [i.strip() for i in new_ingredients.split(',')]
+        saved_recipes[selected_recipe] = ingredients_list
+        save_data()
+        print(f"\n'{selected_recipe}' updated successfully!")
+
+    elif action == "2":
+        confirm = input(f"Are you sure you want to delete '{selected_recipe}'? (yes/no): ").lower()
+        if confirm == "yes":
+            del saved_recipes[selected_recipe]
+            save_data()
+            print(f"\n'{selected_recipe}' deleted successfully!")
+        else:
+            print("Delete action cancelled.")
+    else:
+        print("Invalid choice. Please try again.")
 def view_extras():
     print("\n=== Extras List ===")
     if not extras_list:
@@ -343,7 +364,7 @@ def main():
         print("3. Delete a Meal")
         print("4. View Saved Recipes")
         print("5. Add a New Recipe")
-        print("6. Edit a Recipe")
+        print("6. Edit a Recipe/Delete a Recipe")
         print("7. View Grocery List")
         print("8. Check Off Items")
         print("9. Manage Extras/Spices")
