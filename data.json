@@ -60,5 +60,6 @@
             "Lunch": null,
             "Dinner": null
         }
-    }
+    },
+    "extras_list": []
 }
