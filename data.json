@@ -61,5 +61,6 @@
             "Dinner": null
         }
     },
-    "extras_list": []
+    "extras_list": [],
+    "checked_off": []
 }

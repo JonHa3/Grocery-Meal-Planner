@@ -9,15 +9,18 @@ saved_recipes = {}
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 meal_plan = {day: { "Breakfast": None, "Lunch": None, "Dinner": None} for day in days}
 extras_list = []
+checked_off = []
+
 
 def load_data():
-    global saved_recipes, meal_plan
+    global saved_recipes, meal_plan, extras_list, checked_off
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
             data = json.load(f)
             saved_recipes = data.get("recipes", {})
             meal_plan = data.get("meal_plan", meal_plan)
             extras_list = data.get("extras_list", [])
+            checked_off = data.get("checked_off", [])
         print("Data loaded successfully!")
 
 def save_data():
@@ -25,7 +28,8 @@ def save_data():
         json.dump({
             "recipes": saved_recipes,
             "meal_plan": meal_plan,
-            "extras_list": extras_list
+            "extras_list": extras_list,
+            "checked_off": checked_off
             }, f, indent=4)
 
 def add_recipe():
@@ -215,12 +219,63 @@ def view_grocery_list():
         for category, ingredients in sorted(categorized.items()):
             print(f"\n{category}:")
             for ingredient in ingredients:
-                print(f" - {ingredient}")
+                status = "✓" if ingredient in checked_off else " "
+                print(f" - [{status}] {ingredient}")
         
         if extras_list:
             print("\nExtras/Spices:")
             for item in extras_list:
-                print(f"  - {item}")
+                status = "✓" if item in checked_off else " "
+                print(f" - [{status}] {item}")
+
+def check_off_items():
+    print("\n=== Check Off Items ===")
+    all_ingredients = []
+
+    for day, meals in meal_plan.items():
+        for meal_type, meal_name in meals.items():
+            if meal_name and meal_name in saved_recipes:
+                for ingredient in saved_recipes[meal_name]:
+                    if ingredient not in all_ingredients:
+                        all_ingredients.append(ingredient)
+    
+    for item in extras_list:
+        if item not in all_ingredients:
+            all_ingredients.append(item)
+
+    if not all_ingredients:
+        print("\nNo ingredients found!")
+        return
+    
+    while True:
+        print("\nYour Grocery List: (✓ = already have it): ")
+        for i, ingredient in enumerate(all_ingredients, 1):
+            status = "✓" if ingredient in checked_off else " "
+            print(f"{i}. [{status}] {ingredient}")
+
+        print("\n0. Go Back")
+        print("Enter the number corresponding to the item you want to check off: ")
+        print("Type 'clear' to reset all checked off items.")
+
+        choice = input("\nEnter your choice: ")
+
+        if choice == "0":
+            return
+        elif choice.lower() == "clear":
+            checked_off.clear()
+            save_data()
+            print("All items have been unchecked.")
+        elif choice.isdigit() and int(choice) in range(1, len(all_ingredients) + 1):
+            item = all_ingredients[int(choice) - 1]
+            if item in checked_off:
+                checked_off.remove(item)
+                print(f"'{item}' unchecked!")
+            else: 
+                checked_off.append(item)
+                print(f"'{item}' checked off!")
+            save_data()
+        else:
+            print("Invalid choice. Please try again.")
 
 def clear_meal_plan():
     global meal_plan
@@ -290,11 +345,12 @@ def main():
         print("5. Add a New Recipe")
         print("6. Edit a Recipe")
         print("7. View Grocery List")
-        print("8. Manage Extras/Spices")
-        print("9. Clear Weekly Plan")
-        print("10. Exit")
+        print("8. Check Off Items")
+        print("9. Manage Extras/Spices")
+        print("10. Clear Weekly Plan")
+        print("11. Exit")
 
-        choice = input("\nPlease enter your choice (1-9): ")
+        choice = input("\nPlease enter your choice (1-11): ")
 
         if choice == "1":
             view_meal_plan()
@@ -311,11 +367,13 @@ def main():
         elif choice == "7":
             view_grocery_list()
         elif choice == "8":
-            manage_extras()
+            check_off_items()
         elif choice == "9":
-            clear_meal_plan()
+            manage_extras()
         elif choice == "10":
-            print("Goodbye!")
+            clear_meal_plan()
+        elif choice == "11":
+            print("Thank you for using Grocery Meal Planner! Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")
