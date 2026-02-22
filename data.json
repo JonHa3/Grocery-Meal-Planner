@@ -118,5 +118,9 @@
         "Turkey",
         "Honey",
         "Bagel"
-    ]
+    ],
+    "category_overrides": {
+        "Creatine": "Meat & Protein",
+        "Zuchinni": "Produce"
+    }
 }

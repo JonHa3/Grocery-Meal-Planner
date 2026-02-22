@@ -10,10 +10,11 @@ days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sun
 meal_plan = {day: { "Breakfast": None, "Lunch": None, "Dinner": None} for day in days}
 extras_list = []
 checked_off = []
+category_overrides = {}
 
 
 def load_data():
-    global saved_recipes, meal_plan, extras_list, checked_off
+    global saved_recipes, meal_plan, extras_list, checked_off, category_overrides
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
             data = json.load(f)
@@ -21,6 +22,7 @@ def load_data():
             meal_plan = data.get("meal_plan", meal_plan)
             extras_list = data.get("extras_list", [])
             checked_off = data.get("checked_off", [])
+            category_overrides = data.get("category_overrides", {})
         print("Data loaded successfully!")
 
 def save_data():
@@ -29,8 +31,14 @@ def save_data():
             "recipes": saved_recipes,
             "meal_plan": meal_plan,
             "extras_list": extras_list,
-            "checked_off": checked_off
+            "checked_off": checked_off,
+            "category_overrides": category_overrides
             }, f, indent=4)
+
+def get_ingredient_category(ingredient):
+    if ingredient in category_overrides:
+        return category_overrides[ingredient]
+    return get_category(ingredient)
 
 def add_recipe():
     print("0. Cancel")
@@ -212,6 +220,60 @@ def manage_extras():
         else:
             print("Invalid choice. Please try again.")
 
+def override_category():
+    print("\n=== Override Ingredient Category ===")
+    all_ingredients = []
+
+    for recipe, ingredients in saved_recipes.items():
+        for ingredient in ingredients:
+            if ingredient not in all_ingredients:
+                all_ingredients.append(ingredient)
+
+    for item in extras_list:
+        if item not in all_ingredients:
+            all_ingredients.append(item)
+
+    if not all_ingredients:
+        print("\nNo ingredients found!")
+        return
+
+    print("\nAll ingredients:")
+    for i, ingredient in enumerate(all_ingredients, 1):
+        current_category = get_ingredient_category(ingredient)
+        print(f"  {i}. {ingredient} (currently: {current_category})")
+    print("0. Go Back")
+
+    choice = input("\nEnter the number of the ingredient to override: ")
+
+    if choice == "0":
+        return
+
+    if not choice.isdigit() or int(choice) < 1 or int(choice) > len(all_ingredients):
+        print("Invalid choice. Please try again.")
+        return
+
+    selected_ingredient = all_ingredients[int(choice) - 1]
+
+    category_list = sorted(categories.keys()) + ["Other"]
+    print(f"\nSelect a new category for '{selected_ingredient}':")
+    for i, category in enumerate(category_list, 1):
+        print(f"  {i}. {category}")
+    print("0. Go Back")
+
+    cat_choice = input("\nEnter your choice: ")
+
+    if cat_choice == "0":
+        return
+
+    if not cat_choice.isdigit() or int(cat_choice) < 1 or int(cat_choice) > len(category_list):
+        print("Invalid choice. Please try again.")
+        return
+
+    selected_category = category_list[int(cat_choice) - 1]
+    category_overrides[selected_ingredient] = selected_category
+    save_data()
+    print(f"\n'{selected_ingredient}' category set to '{selected_category}' successfully!")
+
 def view_recipes():
     if not saved_recipes:
         print("\nNo recipes saved yet.")
@@ -289,7 +351,7 @@ def view_grocery_list():
         for meal_type, meal_name in meals.items():
             if meal_name and meal_name in saved_recipes:
                 for ingredient in saved_recipes[meal_name]:
-                    category = get_category(ingredient)
+                    category = get_ingredient_category(ingredient)
                     if category not in categorized:
                         categorized[category] = []
                     if ingredient not in categorized[category]:
@@ -367,7 +429,7 @@ def export_grocery_list():
         for meal_type, meal_name in meals.items():
             if meal_name and meal_name in saved_recipes:
                 for ingredient in saved_recipes[meal_name]:
-                    category = get_category(ingredient)
+                    category = get_ingredient_category(ingredient)
                     if category not in categorized:
                         categorized[category] = []
                     if ingredient not in categorized[category]:
@@ -475,10 +537,11 @@ def main():
         print("8. Check Off Items")
         print("9. Export Grocery List")
         print("10. Manage Extras/Spices")
-        print("11. Clear Weekly Plan")
-        print("12. Exit")
+        print("11. Override Ingredient Category")
+        print("12. Clear Weekly Plan")
+        print("13. Exit")
 
-        choice = input("\nPlease enter your choice (1-12): ")
+        choice = input("\nPlease enter your choice (1-13): ")
 
         if choice == "1":
             view_meal_plan()
@@ -501,8 +564,10 @@ def main():
         elif choice == "10":
             manage_extras()
         elif choice == "11":
-            clear_meal_plan()
+            override_category()
         elif choice == "12":
+            clear_meal_plan()
+        elif choice == "13":
             confirm = input("Are you sure you want to exit? (yes/no): ")
             if confirm.lower() == "yes":
                 print("Goodbye!")
