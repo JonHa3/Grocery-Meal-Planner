@@ -16,14 +16,19 @@ category_overrides = {}
 def load_data():
     global saved_recipes, meal_plan, extras_list, checked_off, category_overrides
     if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            data = json.load(f)
-            saved_recipes = data.get("recipes", {})
-            meal_plan = data.get("meal_plan", meal_plan)
-            extras_list = data.get("extras_list", [])
-            checked_off = data.get("checked_off", [])
-            category_overrides = data.get("category_overrides", {})
-        print("Data loaded successfully!")
+        try:
+            with open(DATA_FILE, "r") as f:
+                data = json.load(f)
+                saved_recipes = data.get("recipes", {})
+                meal_plan = data.get("meal_plan", meal_plan)
+                extras_list = data.get("extras", [])
+                checked_off = data.get("checked_off", [])
+                category_overrides = data.get("category_overrides", {})
+            print("Data loaded successfully!")
+        except json.JSONDecodeError:
+            print("Warning: Data file corrupted. Starting fresh.")
+        except Exception as e:
+            print(f"Warning: Could not load data ({e}). Starting fresh.")
 
 def save_data():
     with open(DATA_FILE, "w") as f:
