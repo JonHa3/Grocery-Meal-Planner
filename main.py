@@ -80,42 +80,77 @@ def edit_recipe():
 
     selected_recipe = recipe_list[int(choice) - 1]
 
-    print(f"\nWhat would you like to do with '{selected_recipe}'?")
-    print("1. Edit Ingredients")
-    print("2. Delete Recipe")
-    print("0. Go Back")
-    
-    action = input("\nEnter your choice: ")
+    while True:
+        print(f"\nWhat would you like to do with '{selected_recipe}'?")
+        print("1. Add an Ingredient")
+        print("2. Remove an Ingredient")
+        print("3. Replace All Ingredients")
+        print("4. Delete Recipe")
+        print("0. Go Back")
 
-    if action == "0":
-        return
-    elif action == "1":
+        action = input("\nEnter your choice: ")
 
-        print(f"\nCurrent ingredients for {selected_recipe}:")
-        for ingredient in saved_recipes[selected_recipe]:
-            print(f" - {ingredient}")
-
-        print("\nEnter the new ingredients that will replace the current ones (comma separated)")
-        new_ingredients = input("Enter ingredients with quantitities (e.g. '2 eggs, 1 cup flour'): ")
-
-        if new_ingredients == "0":
+        if action == "0":
             return
-
-        ingredients_list = [i.strip() for i in new_ingredients.split(',')]
-        saved_recipes[selected_recipe] = ingredients_list
-        save_data()
-        print(f"\n'{selected_recipe}' updated successfully!")
-
-    elif action == "2":
-        confirm = input(f"Are you sure you want to delete '{selected_recipe}'? (yes/no): ").lower()
-        if confirm == "yes":
-            del saved_recipes[selected_recipe]
+        elif action == "1":
+            new_ingredient = input("Enter the ingredient to add: ")
+            if new_ingredient == "0":
+                return
+            if new_ingredient.strip() == "":
+                print("Ingredient cannot be empty. Please try again.")
+                continue
+            saved_recipes[selected_recipe].append(new_ingredient.strip())
             save_data()
-            print(f"\n'{selected_recipe}' deleted successfully!")
+            print(f"\n'{new_ingredient}' added to '{selected_recipe}' successfully!") 
+        elif action == "2":
+            if not saved_recipes[selected_recipe]:
+                print(f"\nNo ingredients to remove from '{selected_recipe}'!")
+                continue
+            print(f"\nCurrent ingredients for {selected_recipe}:")
+            for i, ingredient in enumerate(saved_recipes[selected_recipe], 1):
+                print(f"{i}. {ingredient}")
+            delete_choice = input("\nEnter the number corresponding to the ingredient you want to remove: ")
+            if delete_choice == "0":
+                return
+            if not delete_choice.isdigit() or int(delete_choice) < 1 or int(delete_choice) > len(saved_recipes[selected_recipe]):
+                print("Invalid choice. Please try again.")
+                continue
+            removed_ingredient = saved_recipes[selected_recipe].pop(int(delete_choice) - 1)
+            save_data()
+            print(f"\n'{removed_ingredient}' removed from '{selected_recipe}' successfully!")
+    
+        elif action == "3":
+            print(f"\nCurrent ingredients for '{selected_recipe}':")
+            for ingredient in saved_recipes[selected_recipe]:
+                print(f"  - {ingredient}")
+            print("\nEnter new ingredients (this will replace the current list)")
+            while True:
+                new_ingredients = input("Enter ingredients with quantities, separated by commas: ")
+                if new_ingredients == "0":
+                    break
+                if new_ingredients.strip() == "":
+                    print("Ingredients cannot be blank!")
+                    continue
+                ingredient_list = [i.strip() for i in new_ingredients.split(',') if i.strip() != ""]
+                if not ingredient_list:
+                    print("No valid ingredients entered. Please try again.")
+                    continue
+                saved_recipes[selected_recipe] = ingredient_list
+                save_data()
+                print(f"\n'{selected_recipe}' updated successfully!")
+                break
+        elif action == "4":
+            confirm = input(f"\nAre you sure you want to delete '{selected_recipe}'? (yes/no): ")
+            if confirm.lower() == "yes":
+                del saved_recipes[selected_recipe]
+                save_data()
+                print(f"\n'{selected_recipe}' deleted successfully!")
+                return
+            else:
+                print("\nDeletion cancelled.")
         else:
-            print("Delete action cancelled.")
-    else:
-        print("Invalid choice. Please try again.")
+            print("Invalid choice. Please try again.")
+
 def view_extras():
     print("\n=== Extras List ===")
     if not extras_list:
