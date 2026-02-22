@@ -488,8 +488,12 @@ def main():
         elif choice == "11":
             clear_meal_plan()
         elif choice == "12":
-            print("Thank you for using Grocery Meal Planner! Goodbye!")
-            break
+            confirm = input("Are you sure you want to exit? (yes/no): ")
+            if confirm.lower() == "yes":
+                print("Goodbye!")
+                break
+            else:
+                print("Exit cancelled, Returning to main menu...")
         else:
             print("Invalid choice. Please try again.")
 
