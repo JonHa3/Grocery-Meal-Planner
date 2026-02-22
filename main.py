@@ -85,7 +85,8 @@ def edit_recipe():
         print("1. Add an Ingredient")
         print("2. Remove an Ingredient")
         print("3. Replace All Ingredients")
-        print("4. Delete Recipe")
+        print("4. Rename Recipe")
+        print("5. Delete Recipe")
         print("0. Go Back")
 
         action = input("\nEnter your choice: ")
@@ -140,6 +141,20 @@ def edit_recipe():
                 print(f"\n'{selected_recipe}' updated successfully!")
                 break
         elif action == "4":
+            new_name = input("Enter the new name for the recipe: ")
+            if new_name.strip() == "":
+                print("Recipe name cannot be empty. Please try again.")
+                continue
+            if new_name == "0":
+                continue
+            if new_name in saved_recipes:
+                print("A recipe with that name already exists. Please choose a different name.")
+                continue
+            saved_recipes[new_name] = saved_recipes.pop(selected_recipe)
+            save_data()
+            print(f"\n'{selected_recipe}' renamed to '{new_name}' successfully!")
+            return
+        elif action == "5":
             confirm = input(f"\nAre you sure you want to delete '{selected_recipe}'? (yes/no): ")
             if confirm.lower() == "yes":
                 del saved_recipes[selected_recipe]
