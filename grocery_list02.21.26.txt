@@ -1,0 +1,46 @@
+==== Grocery List ====
+Generated on: February 21, 2026
+==============================
+
+Dairy:
+ - [✓] Almond Milk
+ - [✓] Cheese
+
+Grains & Pasta:
+ - [✓] Bread
+ - [ ] Rice
+
+Meat & Protein:
+ - [✓] Protein Powder
+ - [✓] Turkey
+ - [ ] Ground Beef
+ - [ ] Eggs
+ - [ ] Chicken
+ - [ ] Turkey/Ground Beef
+
+Other:
+ - [✓] Creatine
+ - [ ] Zuchinni
+ - [ ] 
+ - [ ] Oyster Shells
+
+Produce:
+ - [ ] Frozen Strawberries
+ - [ ] Bananas
+ - [✓] Tomato
+ - [✓] Lettuce
+ - [ ] Sweet Potato
+ - [ ] Avocado
+
+Spices & Condiments:
+ - [ ] Mayo
+ - [✓] Mustard
+ - [✓] Honey
+
+Extras/Spices:
+ - [✓] Garlic
+ - [✓] Onion Powder
+ - [ ] Butter
+ - [✓] Bagel
+ - [ ] Oil
+ - [ ] Eggs

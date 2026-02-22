@@ -20,38 +20,75 @@
             "Alfredo",
             "Chicken",
             "Parmesan"
+        ],
+        "Ground Beef Sweet Potato Bowl": [
+            "Sweet Potato",
+            "Ground Beef",
+            "Avocado",
+            "Honey",
+            "Eggs"
+        ],
+        "Crispy Chicken Drums over Rice": [
+            "Chicken",
+            "Rice",
+            "Zuchinni",
+            "Honey",
+            ""
+        ],
+        "Lettuce Wraps": [
+            "Turkey/Ground Beef",
+            "Lettuce",
+            "Oyster Shells",
+            "Rice",
+            "Avocado"
+        ],
+        "Sandwich": [
+            "Turkey",
+            "Bread",
+            "Mayo",
+            "Cheese",
+            "Tomato",
+            "Lettuce",
+            "Mustard"
+        ],
+        "Strawberry Protein Shake": [
+            "Frozen Strawberries",
+            "Bananas",
+            "Almond Milk",
+            "Protein Powder",
+            "Creatine"
         ]
     },
     "meal_plan": {
         "Monday": {
-            "Breakfast": null,
-            "Lunch": null,
-            "Dinner": "Tacos"
-        },
-        "Tuesday": {
-            "Breakfast": null,
-            "Lunch": null,
+            "Breakfast": "Strawberry Protein Shake",
+            "Lunch": "Sandwich",
             "Dinner": null
         },
-        "Wednesday": {
-            "Breakfast": null,
+        "Tuesday": {
+            "Breakfast": "Strawberry Protein Shake",
             "Lunch": null,
+            "Dinner": "Ground Beef Sweet Potato Bowl"
+        },
+        "Wednesday": {
+            "Breakfast": "Strawberry Protein Shake",
+            "Lunch": "Sandwich",
             "Dinner": null
         },
         "Thursday": {
-            "Breakfast": null,
+            "Breakfast": "Strawberry Protein Shake",
             "Lunch": null,
-            "Dinner": null
+            "Dinner": "Crispy Chicken Drums over Rice"
         },
         "Friday": {
-            "Breakfast": null,
-            "Lunch": null,
-            "Dinner": "Chicken Alfredo"
+            "Breakfast": "Strawberry Protein Shake",
+            "Lunch": "Sandwich",
+            "Dinner": null
         },
         "Saturday": {
             "Breakfast": null,
             "Lunch": null,
-            "Dinner": null
+            "Dinner": "Lettuce Wraps"
         },
         "Sunday": {
             "Breakfast": null,
@@ -62,12 +99,25 @@
     "extras_list": [
         "Garlic",
         "Onion Powder",
-        "Butter"
+        "Butter",
+        "Bagel",
+        "Oil",
+        "Eggs"
     ],
     "checked_off": [
         "Garlic",
         "Onion Powder",
         "Cheese",
-        "Beef"
+        "Beef",
+        "Bread",
+        "Mustard",
+        "Tomato",
+        "Lettuce",
+        "Almond Milk",
+        "Protein Powder",
+        "Creatine",
+        "Turkey",
+        "Honey",
+        "Bagel"
     ]
 }

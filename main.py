@@ -35,16 +35,27 @@ def save_data():
 def add_recipe():
     print("0. Cancel")
     name = input("Enter the name of the recipe: ")
+    if name.strip() == "" :
+        print("Recipe name cannot be empty. Recipe not saved.")
+        return
     if name == "0":
         return
 
-    print("0. Cancel")
-    ingredients = input("Enter the ingredients (comma separated): ")
-    if ingredients == "0":
-        return
+    while True:
+        print("0. Cancel")
+        ingredients = input("Enter the ingredients (comma separated): ")
+        if ingredients == "0":
+            return
+        if ingredients.strip() == "":
+            print("No ingredients entered. Please try again.")
+            continue
+        ingredient_list = [i.strip() for i in ingredients.split(',') if i.strip() != ""]
+        if not ingredient_list:
+            print("No valid ingredients entered. Please try again.")
+            continue
+        break
 
-    ingredients_list = [i.strip() for i in ingredients.split(',')]
-    saved_recipes[name] = ingredients_list
+    saved_recipes[name] = ingredient_list
     save_data()
     print(f"\n'{name}' added successfully!")
 
@@ -319,7 +330,7 @@ def export_grocery_list():
     if filename.strip() == "":
         print("Defaulting to 'grocery_list.txt'")
         filename = "grocery_list.txt"
-    filename = filename.strip().replace(" ", "_")
+    filename = filename.strip().replace(" ", "_").replace("/", "-").replace("\\", "-").replace(":", "-")
     if not filename.endswith(".txt"):
         filename += ".txt"
     filepath = os.path.join(BASE_DIR, filename)
@@ -405,8 +416,8 @@ def main():
         print("Welcome to the Grocery Meal Planner!")
         print("This program will help you plan your grocery shopping and meals for the week.")
         print("1. View Weekly Meal Plan")
-        print("2. Add a Meal")
-        print("3. Delete a Meal")
+        print("2. Add a Meal to the Meal Plan")
+        print("3. Delete a Meal from the Meal Plan")
         print("4. View Saved Recipes")
         print("5. Add a New Recipe")
         print("6. Edit a Recipe/Delete a Recipe")
