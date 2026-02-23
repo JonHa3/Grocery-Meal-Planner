@@ -12,7 +12,7 @@ WINDOW_HEIGHT = 700
 BG_MAIN = "#D4DE95"
 BG_CONTENT = "#D4DE95"
 BG_SIDEBAR = "#3D4127"
-BG_CARD = "white"
+BG_CARD = "#FFFFFF"
 BTN_COLOR = "#636B2F"
 BTN_HOVER = "#4a5022"
 TEXT_LIGHT = "#FFFFFF"
@@ -160,7 +160,8 @@ class MealPlannerApp:
             self.frames[frame_name] = frame
             frame.place(relwidth=1, relheight=1)
         
-        self.build_home()
+        self._build_home()
+        self._build_planner()
 
     def show_frame(self, name):
         for frame_name, btn in self.nav_buttons.items():
@@ -169,7 +170,7 @@ class MealPlannerApp:
             self.nav_buttons[name].configure(bg=BTN_COLOR)
         self.frames[name].lift()
     
-    def build_home(self):
+    def _build_home(self):
         frame = self.frames["home"]
 
         tk.Label(
@@ -194,7 +195,198 @@ class MealPlannerApp:
             card.pack(side='left', padx=15)
             tk.Label(card, text=icon, font=("Helvetica", 28), bg=BG_CARD).pack()
             tk.Label(card, text=count, font=FONT_TITLE, bg=BG_CARD, fg=BTN_COLOR).pack()
-            tk.Label(card, text=label, font=FONT_BODY, bg=BG_CARD, fg=TEXT_DARK).pack()            
+            tk.Label(card, text=label, font=FONT_BODY, bg=BG_CARD, fg=TEXT_DARK).pack() 
+
+    def _build_planner(self):
+        frame = self.frames["planner"]
+
+        tk.Label(
+            frame,
+            text="Meal Planner",
+            font=FONT_TITLE,
+            bg=BG_CONTENT,
+            fg=TEXT_DARK
+        ).grid(row=0, column=0, columnspan=4, pady=(20,10), padx=20, sticky='w')      
+
+        for col, header in enumerate(["Day", "Breakfast", "Lunch", "Dinner"]):
+            tk.Label(
+                frame,
+                text=header,
+                font=FONT_SUBTITLE,
+                bg=BG_CONTENT,
+                fg=BTN_COLOR
+            ).grid(row=1, column=col, padx=20, pady=(0,10), sticky='w')
+
+        for row, day in enumerate(days,2):     
+            tk.Label(
+                frame,
+                text=day,
+                font=FONT_BTN,
+                bg=BG_CONTENT,
+                fg=TEXT_DARK,
+                width=10,
+                anchor='w'
+            ).grid(row=row, column=0, padx=20, pady=5, sticky='w')
+
+            for col, meal_type in enumerate(["Breakfast", "Lunch", "Dinner"],1):
+                meal = meal_plan[day][meal_type] or "Not Set"
+                btn = tk.Button(
+                    frame,
+                    text=meal,
+                    font=FONT_BODY,
+                    bg=BG_CARD,
+                    fg=TEXT_DARK,
+                    activebackground=BTN_HOVER,
+                    activeforeground=TEXT_LIGHT,
+                    width=18,
+                    anchor='w',
+                    padx=10,
+                    bd=1,
+                    cursor="hand2",
+                    command=lambda d=day, m=meal_type: self._edit_meal_popup(d, m)
+                )
+                btn.grid(row=row, column=col, padx=10, pady=5)
+
+        frame.configure(bg=BG_CONTENT)
+
+    def _edit_meal_popup(self, day, meal_type):
+        popup = tk.Toplevel(self.root)
+        popup.title(f"{day} - {meal_type.capitalize()}")
+        popup.geometry("400x500")
+        popup.resizable(False, False)
+        popup.configure(bg=BG_CONTENT)
+        popup.grab_set()
+
+        tk.Label(
+            popup,
+            text=f"Set {meal_type.capitalize()} for {day}",
+            font=FONT_SUBTITLE,
+            bg=BG_CONTENT,
+            fg=TEXT_DARK
+        ).pack(pady=(20, 10))
+
+        # Search bar
+        tk.Label(
+            popup,
+            text="Search recipes:",
+            font=FONT_BODY,
+            bg=BG_CONTENT,
+            fg=TEXT_DARK
+        ).pack(anchor="w", padx=20)
+
+        search_var = tk.StringVar()
+        search_entry = tk.Entry(popup, textvariable=search_var, font=FONT_BODY, width=30)
+        search_entry.pack(padx=20, pady=(0, 10))
+
+        # Recipe listbox
+        listbox_frame = tk.Frame(popup, bg=BG_CONTENT)
+        listbox_frame.pack(fill='both', expand=True, padx=20)
+        
+        scrollbar = tk.Scrollbar(listbox_frame)
+        scrollbar.pack(side='right', fill='y')
+
+        listbox = tk.Listbox(
+            listbox_frame,
+            font=FONT_BODY,
+            selectbackground=BTN_COLOR,
+            selectforeground=TEXT_LIGHT,
+            height=10,
+            yscrollcommand=scrollbar.set
+        )
+        listbox.pack(side='left', fill='both', expand=True)
+        scrollbar.config(command=listbox.yview) 
+
+        # Populate listbox with recipes
+        def populate_listbox(filter_text=""):
+            listbox.delete(0, tk.END)
+            for recipe in sorted(saved_recipes.keys()):
+                if filter_text.lower() in recipe.lower():
+                    listbox.insert(tk.END, recipe)
+
+        populate_listbox()
+
+        # Search filter
+        def on_search(*args):
+            populate_listbox(search_var.get())
+
+        search_var.trace("w",on_search)
+
+        # Custom Meal Entry
+        tk.Label(
+            popup,
+            text="Or enter custom meal:",
+            font=FONT_BODY,
+            bg=BG_CONTENT,
+            fg=TEXT_DARK
+        ).pack(anchor="w", padx=20, pady=(10, 0))
+
+        custom_entry = tk.Entry(popup, font=FONT_BODY, width=30)
+        custom_entry.pack(padx=20, pady=(0, 10))
+
+        # Buttons
+        btn_frame = tk.Frame(popup, bg=BG_CONTENT)
+        btn_frame.pack(pady=10)
+
+        def save_meal():
+            if custom_entry.get().strip():
+                meal_name = custom_entry.get().strip()
+            elif listbox.curselection():
+                meal_name = listbox.get(listbox.curselection())
+            else:
+                return  # No selection or input, do nothing
+            meal_plan[day][meal_type] = meal_name
+            save_data()
+            self._refresh_planner()
+            popup.destroy()
+
+        def clear_meal():
+            meal_plan[day][meal_type] = None
+            save_data()
+            self._refresh_planner()
+            popup.destroy()
+        
+        tk.Button(
+            btn_frame,
+            text="Save",
+            font=FONT_BTN,
+            bg=BTN_COLOR,
+            fg=TEXT_LIGHT,
+            padx=20,
+            cursor="hand2",
+            command=save_meal
+        ).pack(side='left', padx=10)
+
+        tk.Button(
+            btn_frame,
+            text="Clear",
+            font=FONT_BTN,
+            bg="#8B0000",
+            fg=TEXT_LIGHT,
+            padx=20,
+            cursor="hand2",
+            command=clear_meal
+        ).pack(side="left", padx=10)
+
+        tk.Button(
+            btn_frame,
+            text="Cancel",
+            font=FONT_BTN,           
+            bg=BG_CARD,
+            fg=TEXT_DARK,
+            padx=20,
+            cursor="hand2",
+            command=popup.destroy
+        ).pack(side="left", padx=10)
+
+    def _refresh_planner(self):
+        # Refresh the meal planner view to reflect any changes made to the meal plan
+        for widget in self.frames["planner"].winfo_children():
+            widget.destroy()
+        self._build_planner()
+
+
+
+
 
     # ----- Run --------------------------------------------------------------------------------
 if __name__ == "__main__":

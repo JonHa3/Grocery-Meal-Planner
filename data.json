@@ -74,9 +74,9 @@
     },
     "meal_plan": {
         "Monday": {
-            "Breakfast": "Morning Shake",
+            "Breakfast": null,
             "Lunch": null,
-            "Dinner": "Beef and Rice"
+            "Dinner": null
         },
         "Tuesday": {
             "Breakfast": null,
@@ -109,7 +109,7 @@
             "Dinner": null
         }
     },
-    "extras_list": [],
+    "extras": [],
     "checked_off": [
         "Garlic",
         "Onion Powder",
