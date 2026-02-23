@@ -56,38 +56,52 @@
             "Almond Milk",
             "Protein Powder",
             "Creatine"
+        ],
+        "Morning Shake": [
+            "80 grams oats",
+            "21 grams honey",
+            "45 grams protein powder",
+            "5 grams creatine",
+            "11 ml vanilla nurri shake"
+        ],
+        "Beef and Rice": [
+            "160 grams of 93/7 ground beef",
+            "195 grams of cooked jasmine rice"
+        ],
+        "Just Bare Chicken Breast Chunks": [
+            "Chicken breast chunks"
         ]
     },
     "meal_plan": {
         "Monday": {
-            "Breakfast": "Strawberry Protein Shake",
-            "Lunch": "Sandwich",
-            "Dinner": null
+            "Breakfast": "Morning Shake",
+            "Lunch": null,
+            "Dinner": "Beef and Rice"
         },
         "Tuesday": {
-            "Breakfast": "Strawberry Protein Shake",
+            "Breakfast": null,
             "Lunch": null,
-            "Dinner": "Ground Beef Sweet Potato Bowl"
+            "Dinner": null
         },
         "Wednesday": {
-            "Breakfast": "Strawberry Protein Shake",
-            "Lunch": "Sandwich",
+            "Breakfast": null,
+            "Lunch": null,
             "Dinner": null
         },
         "Thursday": {
-            "Breakfast": "Strawberry Protein Shake",
+            "Breakfast": null,
             "Lunch": null,
-            "Dinner": "Crispy Chicken Drums over Rice"
+            "Dinner": null
         },
         "Friday": {
-            "Breakfast": "Strawberry Protein Shake",
-            "Lunch": "Sandwich",
+            "Breakfast": null,
+            "Lunch": null,
             "Dinner": null
         },
         "Saturday": {
             "Breakfast": null,
             "Lunch": null,
-            "Dinner": "Lettuce Wraps"
+            "Dinner": null
         },
         "Sunday": {
             "Breakfast": null,
@@ -95,14 +109,7 @@
             "Dinner": null
         }
     },
-    "extras_list": [
-        "Garlic",
-        "Onion Powder",
-        "Butter",
-        "Bagel",
-        "Oil",
-        "Eggs"
-    ],
+    "extras_list": [],
     "checked_off": [
         "Garlic",
         "Onion Powder",
