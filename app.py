@@ -162,6 +162,7 @@ class MealPlannerApp:
         
         self._build_home()
         self._build_planner()
+        self._build_recipes()
 
     def show_frame(self, name):
         for frame_name, btn in self.nav_buttons.items():
@@ -309,7 +310,7 @@ class MealPlannerApp:
         def on_search(*args):
             populate_listbox(search_var.get())
 
-        search_var.trace("w",on_search)
+        search_var.trace_add("write",on_search)
 
         # Custom Meal Entry
         tk.Label(
@@ -383,6 +384,169 @@ class MealPlannerApp:
         for widget in self.frames["planner"].winfo_children():
             widget.destroy()
         self._build_planner()
+
+
+    def _build_recipes(self):
+        frame = self.frames["recipes"]
+
+        # Title and Add button
+        top_frame = tk.Frame(frame, bg=BG_CONTENT)
+        top_frame.grid(row=0, column=0, columnspan=2, sticky="ew", padx=20, pady=(20, 10))
+
+        tk.Label(
+            top_frame,
+            text="Recipes",
+            font=FONT_TITLE,
+            bg=BG_CONTENT,
+            fg=TEXT_DARK
+        ).pack(side="left")
+
+        tk.Button(
+            top_frame,
+            text="+ Add Recipe",
+            font=FONT_BTN,
+            bg=BTN_COLOR,
+            fg=TEXT_LIGHT,
+            padx=15,
+            pady=5,
+            cursor="hand2",
+            command=lambda: print("Add Recipe functionality to be implemented")
+        ).pack(side="right")
+
+        # Left side: Recipe list
+        left_frame = tk.Frame(frame, bg=BG_CONTENT, width=300)
+        left_frame.grid(row=1, column=0, sticky="ns", padx=(20, 10), pady=10)
+        left_frame.grid_propagate(False)
+
+        # Search bar
+        tk.Label(
+            left_frame,
+            text="Search recipes:",
+            font=FONT_BODY,
+            bg=BG_CONTENT,
+            fg=TEXT_DARK
+        ).pack(anchor="w")
+
+        search_var = tk.StringVar()
+        search_entry = tk.Entry(left_frame, textvariable=search_var, font=FONT_BODY, width=30)
+        search_entry.pack(anchor="w", pady=(0, 10))
+
+        # Listbox with scrollbar
+        scrollbar = tk.Scrollbar(left_frame)
+        scrollbar.pack(side='right', fill='y')
+
+        recipe_listbox = tk.Listbox(
+            left_frame,
+            font=FONT_BODY,
+            selectbackground=BTN_COLOR,
+            selectforeground=TEXT_LIGHT,
+            yscrollcommand=scrollbar.set,
+            height=20,
+            width=30
+        )
+        
+        recipe_listbox.pack(side='left', fill='both', expand=True)
+        scrollbar.config(command=recipe_listbox.yview)
+
+        # Populate listbox with recipes
+        def populate_listbox(filter_text=""):
+            recipe_listbox.delete(0, tk.END)
+            for recipe in sorted(saved_recipes.keys()):
+                if filter_text.lower() in recipe.lower():
+                    recipe_listbox.insert(tk.END, recipe)
+
+        populate_listbox()
+
+        def on_search(*args):
+            populate_listbox(search_var.get())
+        
+        search_var.trace("w", on_search)
+
+        # Right side: Recipe details (to be implemented)
+        right_frame = tk.Frame(frame, bg=BG_CARD, padx=20, pady=20)
+        right_frame.grid(row=1, column=1, sticky="nsew", padx=(10, 20), pady=10)
+
+        selected_label = tk.Label(
+            right_frame,
+            text="Select a recipe to view details",
+            font=FONT_SUBTITLE,
+            bg=BG_CARD,
+            fg=TEXT_DARK
+        )
+        selected_label.pack(anchor="w", pady=(0, 10))
+
+        ingredients_frame = tk.Frame(right_frame, bg=BG_CARD)
+        ingredients_frame.pack(fill='both', expand=True, anchor="w")
+
+        # Action buttons (Edit, Delete) - functionality to be implemented
+        action_btn_frame = tk.Frame(right_frame, bg=BG_CARD)
+        action_btn_frame.pack(pady=(10,0), anchor="w")
+
+        edit_btn = tk.Button(
+            action_btn_frame,
+            text="Edit Recipe",
+            font=FONT_BTN,
+            bg=BTN_COLOR,
+            fg=TEXT_LIGHT,
+            padx=15,
+            pady=5,
+            cursor="hand2",
+            state="disabled",
+        )
+        edit_btn.pack(side="left", padx=(0,10))
+
+        delete_btn = tk.Button(
+            action_btn_frame,
+            text="Delete Recipe",   
+            font=FONT_BTN,
+            bg="#8B0000",
+            fg=TEXT_LIGHT,
+            padx=15,
+            pady=5,
+            cursor="hand2",
+            state="disabled",
+        )
+        delete_btn.pack(side="left")
+
+        def show_ingredients(event):
+            # Clear previous details
+            for widget in ingredients_frame.winfo_children():
+                widget.destroy()
+
+            # Get selected recipe
+            if not recipe_listbox.curselection():
+                return
+            
+            recipe_name = recipe_listbox.get(recipe_listbox.curselection())
+            selected_label.config(text=recipe_name)
+
+            # Display ingredients
+            ingredients = saved_recipes.get(recipe_name, [])
+            print(type(ingredients), ingredients)  # Debugging line to check the structure of ingredients
+            if isinstance(ingredients[0], list):
+                ingredients = ingredients[0]
+            for ingredient in ingredients:
+                tk.Label(
+                    ingredients_frame,
+                    text=f"• {ingredient}",
+                    font=FONT_BODY,
+                    bg=BG_CARD,
+                    fg=TEXT_DARK,
+                    anchor="w"
+                ).pack(pady=2, anchor="w")
+                
+
+            # Enable action buttons
+            edit_btn.config(
+                state="normal",
+                command=lambda: self._edit_recipe_popup(recipe_name)
+            )
+            delete_btn.config(
+                state="normal",
+                command=lambda: self._delete_recipe(recipe_name)
+            )
+        recipe_listbox.bind("<<ListboxSelect>>", show_ingredients)
+        frame.grid_columnconfigure(1, weight=1)
 
 
 
